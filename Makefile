@@ -29,7 +29,7 @@ build/attendees.txt: $(VAGRANT_MACHINE)
 		grep -B 1 ^pub | \
 		grep ^fpr: | \
 		cut -d : -f 10 | \
-		gpgparticipants - - '$(PARTY_DATE)' '$(PARTY_ORGANIZER)' '$(PARTY_NAME)') > $@
+		gpgparticipants --algorithm=SHA256 - - '$(PARTY_DATE)' '$(PARTY_ORGANIZER)' '$(PARTY_NAME)') > $@
 
 $(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	vagrant destroy --force
