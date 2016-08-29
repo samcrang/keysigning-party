@@ -6,7 +6,7 @@ PARTY_ORGANIZER?=John Doe <john.doe@example.com>
 VAGRANT_MACHINE=.vagrant/machines/default/virtualbox/id
 
 define execute
-vagrant ssh -c "$(1)"
+vagrant ssh --command "$(1)"
 endef
 
 build: build/party.gpg build/participants.txt
