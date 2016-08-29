@@ -4,9 +4,9 @@ Keysigning Party
 Given a collection of public keys provided by the expected participants the scripts in this repo will:
 
 - Import public keys into a GPG instance inside a VM.
-- Attempts to find updates to keys from public keyservers.
-- Generates a single, armored output of the public keys of all participants (Cleaned using `pgp-clean`)
-- Generates a participant list using `gpgparticipant`.
+- Attempt to find updates to keys from public keyservers.
+- Generate a single, armored output of the public keys of all participants (Cleaned using `pgp-clean`)
+- Generate a participant list using `gpgparticipant`.
 
 It does all this inside a Vagrant box (so you don't need to worry about it trampling over your local GnuPG configuration) and using a [more-secure-than-default GnuPG configuration](https://github.com/ioerror/duraconf/blob/master/configs/gnupg/gpg.conf).
 
