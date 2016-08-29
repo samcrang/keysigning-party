@@ -19,3 +19,10 @@ Usage
 2. Set some environment variables (`PARTY_ORANIZER`, `PARTY_NAME`, `PARTY_DATE`).
 2. Run `make` (ex: `PARTY_ORGANIZER="John Doe <john.doe@example.com>" PARTY_DATE="20160830 1230" PARTY_NAME="My super awesome party" make`).
 3. Check output in `build/`.
+
+Postface
+--------
+
+NB: This was originally hacked together in an afternoon. At the time it seemed like a sensible use of GNU Make (take some files, do some stuff with them using CLI utilities, spit something out), however, it quickly grew to something a bit weird(?). It probably makes sense to pull most of what is in the Makefile out to regular shell scripts(?). This should be reasonably straight forward given the rudimentary tests under `test/`.
+
+You can grab what it's currently doing (and convert it to a shell script) with `make -n`.
