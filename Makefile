@@ -3,16 +3,20 @@
 PARTY_NAME?=Keysigning Party
 PARTY_DATE?=$(shell date "+%Y%m%d %H%M")
 PARTY_ORGANIZER?=John Doe <john.doe@example.com>
+
+OUTPUT_DIRECTORY?=build
+INPUT_DIRECTORY?=participants
+
 VAGRANT_MACHINE=.vagrant/machines/default/virtualbox/id
 
 define execute
 vagrant ssh --command "$(1)"
 endef
 
-build: build/party.gpg build/participants.txt
+build: $(OUTPUT_DIRECTORY)/party.gpg $(OUTPUT_DIRECTORY)/participants.txt
 
-build/party.gpg: $(VAGRANT_MACHINE)
-	mkdir -p build
+$(OUTPUT_DIRECTORY)/party.gpg: $(VAGRANT_MACHINE)
+	mkdir -p  $(OUTPUT_DIRECTORY)
 	$(call execute,rm -f ~/.gnupg/party.gpg)
 	$(call execute,\
 		gpg2 --with-colons --list-keys | \
@@ -22,8 +26,8 @@ build/party.gpg: $(VAGRANT_MACHINE)
 		gpg2 --keyring party.gpg --no-default-keyring --import)
 	$(call execute,gpg2 --keyring party.gpg --no-default-keyring --export --armor) > $@
 
-build/participants.txt: $(VAGRANT_MACHINE)
-	mkdir -p build
+$(OUTPUT_DIRECTORY)/participants.txt: $(VAGRANT_MACHINE)
+	mkdir -p $(OUTPUT_DIRECTORY)
 	$(call execute,\
 		gpg2 --with-colons --fingerprint | \
 		grep -B 1 ^pub | \
@@ -34,7 +38,7 @@ build/participants.txt: $(VAGRANT_MACHINE)
 $(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	vagrant destroy --force
 	vagrant up --provision
-	$(call execute,gpg2 --import /vagrant/participants/*)
+	$(call execute,gpg2 --import /vagrant/$(INPUT_DIRECTORY)/*)
 	$(call execute,gpg2 --refresh-keys)
 
 mostlyclean:
