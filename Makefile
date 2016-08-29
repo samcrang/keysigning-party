@@ -1,4 +1,4 @@
-.PHONY: build clean mostlyclean
+.PHONY: build clean mostlyclean test
 
 PARTY_NAME?=Keysigning Party
 PARTY_DATE?=$(shell date "+%Y%m%d %H%M")
@@ -30,7 +30,7 @@ $(OUTPUT_DIRECTORY)/participants.txt: $(VAGRANT_MACHINE)
 	mkdir -p $(OUTPUT_DIRECTORY)
 	$(call execute,\
 		gpg2 --with-colons --fingerprint | \
-		grep -B 1 ^pub | \
+		grep -A 1 ^pub | \
 		grep ^fpr: | \
 		cut -d : -f 10 | \
 		gpgparticipants --algorithm=SHA256 - - '$(PARTY_DATE)' '$(PARTY_ORGANIZER)' '$(PARTY_NAME)') > $@
@@ -41,8 +41,14 @@ $(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	$(call execute,gpg2 --import /vagrant/$(INPUT_DIRECTORY)/*)
 	$(call execute,gpg2 --refresh-keys)
 
+test: clean
+	mkdir -p test/tmp
+	OUTPUT_DIRECTORY=test/tmp/build INPUT_DIRECTORY=test/fixtures make
+	bats test/
+
 mostlyclean:
 	rm -rf build/
+	rm -rf test/tmp/build
 
 clean: mostlyclean
 	vagrant destroy --force

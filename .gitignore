@@ -1,3 +1,5 @@
 .vagrant
 build/
 participants/
+test/tmp/
+test/build/
