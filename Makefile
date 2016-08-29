@@ -3,6 +3,7 @@
 PARTY_NAME?=Keysigning Party
 PARTY_DATE?=$(shell date "+%Y%m%d %H%M")
 PARTY_ORGANIZER?=John Doe <john.doe@example.com>
+VAGRANT_MACHINE=.vagrant/machines/default/virtualbox/id
 
 define execute
 vagrant ssh -c "$(1)"
@@ -10,7 +11,7 @@ endef
 
 build: build/party.gpg build/attendees.txt
 
-build/party.gpg: .vagrant/machines/default/virtualbox/id
+build/party.gpg: $(VAGRANT_MACHINE)
 	mkdir -p build
 	$(call execute,rm -f ~/.gnupg/party.gpg)
 	$(call execute,\
@@ -21,7 +22,7 @@ build/party.gpg: .vagrant/machines/default/virtualbox/id
 		gpg2 --keyring party.gpg --no-default-keyring --import)
 	$(call execute,gpg2 --keyring party.gpg --no-default-keyring --export --armor) > $@
 
-build/attendees.txt: .vagrant/machines/default/virtualbox/id
+build/attendees.txt: $(VAGRANT_MACHINE)
 	mkdir -p build
 	$(call execute,\
 		gpg2 --with-colons --fingerprint | \
@@ -30,7 +31,7 @@ build/attendees.txt: .vagrant/machines/default/virtualbox/id
 		cut -d : -f 10 | \
 		gpgparticipants - - '$(PARTY_DATE)' '$(PARTY_ORGANIZER)' '$(PARTY_NAME)') > $@
 
-.vagrant/machines/default/virtualbox/id: Vagrantfile conf/*/*
+$(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	vagrant destroy --force
 	vagrant up --provision
 	$(call execute,gpg2 --import /vagrant/attendees/*)
