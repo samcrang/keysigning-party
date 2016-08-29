@@ -25,11 +25,12 @@ build/attendees.txt: .vagrant/machines/default/virtualbox/id
 	mkdir -p build
 	$(call execute,\
 		gpg2 --with-colons --fingerprint | \
+		grep -B 1 ^pub | \
 		grep ^fpr: | \
 		cut -d : -f 10 | \
 		gpgparticipants - - '$(PARTY_DATE)' '$(PARTY_ORGANIZER)' '$(PARTY_NAME)') > $@
 
-.vagrant/machines/default/virtualbox/id: Vagrantfile
+.vagrant/machines/default/virtualbox/id: Vagrantfile conf/*/*
 	vagrant destroy --force
 	vagrant up --provision
 	$(call execute,gpg2 --import /vagrant/attendees/*)
