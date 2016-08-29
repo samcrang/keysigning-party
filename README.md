@@ -20,6 +20,11 @@ Usage
 2. Run `make` (ex: `PARTY_ORGANIZER="John Doe <john.doe@example.com>" PARTY_DATE="20160830 1230" PARTY_NAME="My super awesome party" make`).
 3. Check output in `build/`.
 
+Testing
+-------
+
+Requires [bats](https://github.com/sstephenson/bats). Run tests with `make test`.
+
 Postface
 --------
 
