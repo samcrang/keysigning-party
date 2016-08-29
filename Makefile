@@ -1,4 +1,4 @@
-.PHONY: clean build
+.PHONY: build clean mostlyclean
 
 PARTY_NAME?=Keysigning Party
 PARTY_DATE?=$(shell date "+%Y%m%d %H%M")
@@ -37,6 +37,8 @@ $(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	$(call execute,gpg2 --import /vagrant/participants/*)
 	$(call execute,gpg2 --refresh-keys)
 
-clean:
-	vagrant destroy --force
+mostlyclean:
 	rm -rf build/
+
+clean: mostlyclean
+	vagrant destroy --force
