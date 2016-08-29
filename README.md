@@ -1,6 +1,8 @@
 Keysigning Party
 ================
 
+> "ain't no party like a GPG keysigning party"
+
 Given a collection of public keys provided by the expected participants the scripts in this repo will:
 
 - Import public keys into a GPG instance inside a VM.
