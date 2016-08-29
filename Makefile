@@ -9,7 +9,7 @@ define execute
 vagrant ssh -c "$(1)"
 endef
 
-build: build/party.gpg build/attendees.txt
+build: build/party.gpg build/participants.txt
 
 build/party.gpg: $(VAGRANT_MACHINE)
 	mkdir -p build
@@ -22,7 +22,7 @@ build/party.gpg: $(VAGRANT_MACHINE)
 		gpg2 --keyring party.gpg --no-default-keyring --import)
 	$(call execute,gpg2 --keyring party.gpg --no-default-keyring --export --armor) > $@
 
-build/attendees.txt: $(VAGRANT_MACHINE)
+build/participants.txt: $(VAGRANT_MACHINE)
 	mkdir -p build
 	$(call execute,\
 		gpg2 --with-colons --fingerprint | \
@@ -34,7 +34,7 @@ build/attendees.txt: $(VAGRANT_MACHINE)
 $(VAGRANT_MACHINE): Vagrantfile conf/*/*
 	vagrant destroy --force
 	vagrant up --provision
-	$(call execute,gpg2 --import /vagrant/attendees/*)
+	$(call execute,gpg2 --import /vagrant/participants/*)
 	$(call execute,gpg2 --refresh-keys)
 
 clean:
